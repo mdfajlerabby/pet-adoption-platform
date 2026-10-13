@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { usePreferences } from "@/components/PreferencesProvider";
 import { useToast } from "@/components/ToastProvider";
@@ -12,7 +13,11 @@ export default function PetCard({ pet, sample = false }) {
     event.stopPropagation();
     try {
       const added = toggleWishlist(pet);
-      showToast(added ? `${pet.name} was added to your saved pets.` : `${pet.name} was removed from your saved pets.`);
+      showToast(
+        added
+          ? `${pet.name} was added to your saved pets.`
+          : `${pet.name} was removed from your saved pets.`,
+      );
     } catch (error) {
       showToast(error.message, "error");
     }
@@ -21,12 +26,30 @@ export default function PetCard({ pet, sample = false }) {
   return (
     <article className="pet-card">
       <div className="pet-photo-wrap">
-        <Link className="pet-photo" href={sample ? "/pets" : `/pets/${pet._id || pet.id}`} aria-label={`View ${pet.name}'s profile`}>
-          <img src={pet.imageUrl} alt={pet.name} loading="lazy" />
+        <Link
+          className="pet-photo"
+          href={sample ? "/pets" : `/pets/${pet._id || pet.id}`}
+          aria-label={`View ${pet.name}'s profile`}
+        >
+          <Image
+            src={pet.imageUrl}
+            alt={pet.name}
+            width={800}
+            height={600}
+            className="pet-photo-image"
+            unoptimized
+          />
           <span className="pet-species">{pet.species}</span>
           {sample && <span className="sample-tag">Example profile</span>}
         </Link>
-        <button className={`wishlist-toggle${saved ? " is-saved" : ""}`} onClick={handleWishlist} aria-label={saved ? `Remove ${pet.name} from saved pets` : `Save ${pet.name}`} aria-pressed={saved}>
+        <button
+          className={`wishlist-toggle${saved ? " is-saved" : ""}`}
+          onClick={handleWishlist}
+          aria-label={
+            saved ? `Remove ${pet.name} from saved pets` : `Save ${pet.name}`
+          }
+          aria-pressed={saved}
+        >
           {saved ? "♥" : "♡"}
         </button>
       </div>
@@ -34,14 +57,27 @@ export default function PetCard({ pet, sample = false }) {
         <div className="pet-card-heading">
           <div>
             <h3>{pet.name}</h3>
-            <p>{pet.breed} <span aria-hidden="true">·</span> {pet.age}</p>
+            <p>
+              {pet.breed} <span aria-hidden="true">·</span> {pet.age}
+            </p>
           </div>
-          <span className="pet-gender">{pet.gender === "Female" ? "♀" : pet.gender === "Male" ? "♂" : "•"}</span>
+          <span className="pet-gender">
+            {pet.gender === "Female" ? "♀" : pet.gender === "Male" ? "♂" : "•"}
+          </span>
         </div>
-        <p className="pet-location"><span aria-hidden="true">⌖</span> {pet.location}</p>
+        <p className="pet-location">
+          <span aria-hidden="true">⌖</span> {pet.location}
+        </p>
         <div className="pet-card-footer">
-          <span>{Number(pet.adoptionFee) === 0 ? "Ready for a home" : `$${Number(pet.adoptionFee).toFixed(0)} adoption fee`}</span>
-          <Link className="text-link" href={sample ? "/pets" : `/pets/${pet._id || pet.id}`}>
+          <span>
+            {Number(pet.adoptionFee) === 0
+              ? "Ready for a home"
+              : `$${Number(pet.adoptionFee).toFixed(0)} adoption fee`}
+          </span>
+          <Link
+            className="text-link"
+            href={sample ? "/pets" : `/pets/${pet._id || pet.id}`}
+          >
             Meet {pet.name} <span aria-hidden="true">→</span>
           </Link>
         </div>
